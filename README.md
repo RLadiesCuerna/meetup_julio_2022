@@ -12,7 +12,7 @@ Jueves 14 de Julio de 2022
 
 - [Dra. Joselyn Chávez](https://josschavezf.github.io)
 
-Joselyn es Doctora en Ciencias Bioquímicas y actualmente se encuentra realizando una estancia postdoctoral en el Departamento de Medicina Personalizada de la escuela de Medicina Icahn de Monte Sinai, en la ciudad de Nueva York. Su principal interés es la bioinformática y el desarrollo de software para análisis de datos transcriptómicos espaciales de célula única. Además de su proyecto de investigación, Joselyn disfruta dar clases de R y participar en actividades que ayudan a expandir la comunidad de desarrolladores de software en latinoamérica.
+Joselyn es Doctora en Ciencias Bioquímicas y actualmente se encuentra realizando una estancia postdoctoral en el Departamento de Medicina Personalizada de la escuela de Medicina Icahn de Monte Sinaí, en la ciudad de Nueva York. Su principal interés es la bioinformática y el desarrollo de software para análisis de datos transcriptómicos espaciales de célula única. Además de su proyecto de investigación, Joselyn disfruta dar clases de R y participar en actividades que ayudan a expandir la comunidad de desarrolladores de software en latinoamérica.
 
 
 ## Instalación
@@ -22,7 +22,18 @@ Para descargar este repositorio, da click en el botón Code > Download zip. Si l
 
 ## Conocimientos previos requeridos
 
-Este meetup está dirigido a principiantes de R con interés en aprender a utilizar proyectos de RStudio y crear flujos de trabajo.
+Este meetup está dirigido a principiantes de R con interés en aprender a utilizar los paquetes del tidyverse.
+
+## Temas a cubrir
+
+- Flujos de trabajo para ciencia de datos
+- Paquetes que lo conforman. 
+- Introducción a la gramática de dplyr.
+  - Filtrado
+  - Selección
+  - Mutación
+  - Unión
+  - Agrupación
 
 ## Requerimientos de software
 
