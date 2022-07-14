@@ -89,7 +89,7 @@ knitr::include_graphics("img/whytidyverse.png")
 ---
 # tibbles
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 
 df <- data.frame(x = letters, 
@@ -103,7 +103,7 @@ dt <- tibble(x = letters,
 
 ---
 
-### Diferencias entre data frame y tibble
+## Diferencias entre data frame y tibble
 
 .pull-left[
 ```{r}
@@ -141,6 +141,10 @@ write_csv(encabezado_clima, "datos/encabezado_clima.csv")
 ---
 
 # Filtrado
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+library(datos)
+```
 
 ```{r, eval=FALSE}
 library(datos)

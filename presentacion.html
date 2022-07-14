@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introducción a Tidyverse</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Joselyn Chávez" />
+    <script src="presentacion_files/header-attrs-2.14/header-attrs.js"></script>
+    <script src="presentacion_files/clipboard-2.0.6/clipboard.min.js"></script>
+    <link href="presentacion_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="presentacion_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <link rel="stylesheet" href="rladies.css" type="text/css" />
+    <link rel="stylesheet" href="rladies-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introducción a Tidyverse
+]
+.subtitle[
+## Paquetes que lo conforman y gramática de dplyr
+]
+.author[
+### Joselyn Chávez
+]
+.date[
+### 14/07/2022
+]
+
+---
+
+
+
+# ¿Qué es el tidyverse?
+
+.pull-left[
+&lt;img src="img/tidyverse.png" width="100%" style="display: block; margin: auto;" /&gt;
+.center[&lt;https://www.tidyverse.org&gt;]
+]
+
+.pull-left[&lt;br&gt;&lt;br&gt;&lt;br&gt;
+Colección de paquetes de R diseñados para ciencia de datos. 
+
+Los paquetes comparten una filosofía de diseño, gramática y estructura de datos.
+]
+
+
+---
+# ¿Cuáles paquetes lo componen?
+
+## Tidyverse base
+- **ggplot2**: creación dde gráficos
+- **dplyr**: manipulación de datos
+- **tidyr**: arreglo de datos tidy
+- **readr**: lectura y escritura de datos tabulares
+- purrr: programación funcional
+- **tibble**: re-diseño de data frames
+- **stringr**: manejo de texto (strings)
+- forcats: manejo de factores
+
+---
+# ¿Cuáles paquetes lo componen?
+
+## Lectura de datos
+- **DBI**: bases de datos relacionales
+- haven: SPSS, Stata, y SAS data
+- httr: APIs web.
+- **readxl**: lectura de .xls y .xlsx
+- **googlesheets4**: lectura de Google Sheets
+- googledrive: lectura de archivos de Google Drive
+- rvest: web scraping.
+- jsonlite: JSON
+- xml2: lectura de XML
+
+---
+# ¿Cuáles paquetes lo componen?
+
+.pull-left[
+## Manejo de datos
+- **lubridate**: manejo de fechas
+- hms: zonas horarias.
+- blob: almacenamiento de datos binarios
+
+## Modelado
+- **tidymodels**: modelado y machine learning
+]
+
+.pull-right[
+## Programación
+- **magrittr**: provee el pipe %&gt;% y otros operadores especializados (%$%, %&lt;&gt;%)
+- glue: alternativa al paste() para combinar datos y texto
+]
+
+---
+
+# Paquetes del tidyverse en el análisis de datos
+
+&lt;img src="img/whytidyverse.png" width="80%" style="display: block; margin: auto;" /&gt;
+.center[Imagen tomada de [Why the tidyverse](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/) de Joseph Rickert]
+
+---
+# tibbles
+
+
+```r
+library(dplyr)
+
+df &lt;- data.frame(x = letters, 
+                 y = 1:26, 
+                 z = sample(c(TRUE, FALSE), 26, replace = TRUE))
+
+dt &lt;- tibble(x = letters, 
+                 y = 1:26, 
+                 z = sample(c(TRUE, FALSE), 26, replace = TRUE))
+```
+
+---
+
+## Diferencias entre data frame y tibble
+
+.pull-left[
+
+```r
+head(df)
+```
+
+```
+##   x y     z
+## 1 a 1  TRUE
+## 2 b 2  TRUE
+## 3 c 3 FALSE
+## 4 d 4 FALSE
+## 5 e 5 FALSE
+## 6 f 6  TRUE
+```
+
+]
+
+.pull-right[
+
+```r
+head(dt)
+```
+
+```
+## # A tibble: 6 × 3
+##   x         y z    
+##   &lt;chr&gt; &lt;int&gt; &lt;lgl&gt;
+## 1 a         1 FALSE
+## 2 b         2 FALSE
+## 3 c         3 FALSE
+## 4 d         4 TRUE 
+## 5 e         5 TRUE 
+## 6 f         6 TRUE
+```
+]
+
+---
+
+# Lectura y escritura de tibbles
+
+
+```r
+library(readr)
+
+mediciones_clima &lt;- read_csv("datos/clima.csv")
+```
+
+```
+## Rows: 26115 Columns: 15
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr   (1): origen
+## dbl  (13): anio, mes, dia, hora, temperatura, punto_rocio, humedad, direccio...
+## dttm  (1): fecha_hora
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+---
+
+# Lectura y escritura de tibbles
+
+
+```r
+encabezado_clima &lt;- head(mediciones_clima, 10)
+
+write_csv(encabezado_clima, "datos/encabezado_clima.csv")
+```
+
+---
+
+# Filtrado
+
+
+
+
+```r
+library(datos)
+
+filter(pinguinos, especie == "Adelia")
+
+filter(pinguinos, masa_corporal_g &lt;= 3000)
+
+filter(pinguinos, 
+       masa_corporal_g &lt;= 3300,
+       especie == "Adelia")
+```
+
+---
+# Selección
+
+
+```r
+select(pinguinos, "isla", "masa_corporal_g")
+
+select(pinguinos, "especie", "largo_pico_mm", "alto_pico_mm")
+```
+
+---
+# ¡Tu turno!
+
+- Utiliza el tibble "aviones" del paquete datos.
+- Filtra a los aviones construidos después del año 2000
+- Filtra a los aviones construidos después del año 2000 con más de 100 asientos
+- Selecciona las columnas "tipo", "modelo" y "asientos"
+
+---
+# Modificación
+
+
+```r
+mutate(pinguinos, 
+       masa_corporal_kg = masa_corporal_g/1000)
+```
+
+&lt;img src="img/mutate.png" width="40%" style="display: block; margin: auto 0 auto auto;" /&gt;
+
+---
+# Re ordenamiento de columnas
+
+&lt;br&gt;
+.pull-left[
+
+```r
+relocate(pinguinos, 
+         masa_corporal_g, 
+         .before = isla)
+
+relocate(pinguinos, 
+         masa_corporal_g, 
+         .after = isla)
+```
+]
+
+.pull-right[
+&lt;img src="img/relocate.png" width="100%" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+---
+# Resumen de variables
+
+
+```r
+summarise(pinguinos, 
+          mean(largo_pico_mm, na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 × 1
+##   `mean(largo_pico_mm, na.rm = TRUE)`
+##                                 &lt;dbl&gt;
+## 1                                43.9
+```
+
+---
+
+Aún mejor, asigna un nombre al resultado
+
+```r
+summarise(pinguinos, 
+          promedio_largo_pico = mean(largo_pico_mm, 
+                                     na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 × 1
+##   promedio_largo_pico
+##                 &lt;dbl&gt;
+## 1                43.9
+```
+
+---
+
+Calcula más de un summarise
+
+```r
+summarise(pinguinos, 
+          promedio_largo_pico = mean(largo_pico_mm, 
+                                     na.rm = TRUE),
+          desviacion_largo_pico = sd(largo_pico_mm, 
+                                     na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 × 2
+##   promedio_largo_pico desviacion_largo_pico
+##                 &lt;dbl&gt;                 &lt;dbl&gt;
+## 1                43.9                  5.46
+```
+
+
+---
+# ¡Tu turno!
+
+- Utiliza el tibble "aviones" del paquete datos.
+- Re ordena las columnas para situar al modelo del avión al inicio del tibble
+- Obtén un resúmen con el mínimo, promedio y máximo de asientos
+
+---
+# ¿Cómo funciona summarise?
+
+.center[Split-Apply-Combine]
+
+&lt;img src="img/split.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+# Agrupación 
+
+
+```r
+pinguinos_agrupados &lt;- group_by(pinguinos, especie)
+
+summarise(pinguinos_agrupados,
+          promedio_largo_pico = mean(largo_pico_mm, 
+                                     na.rm = TRUE),
+          desviacion_largo_pico = sd(largo_pico_mm, 
+                                     na.rm = TRUE))
+```
+
+```
+## # A tibble: 3 × 3
+##   especie promedio_largo_pico desviacion_largo_pico
+##   &lt;fct&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
+## 1 Adelia                 38.8                  2.66
+## 2 Barbijo                48.8                  3.34
+## 3 Papúa                  47.5                  3.08
+```
+
+---
+
+Podemos agrupar considerando más de una variable
+
+
+```r
+pinguinos_agrupados &lt;- group_by(pinguinos, especie, isla)
+
+summarise(pinguinos_agrupados,
+          promedio_largo_pico = mean(largo_pico_mm,
+                                     na.rm = TRUE),
+          desviacion_largo_pico = sd(largo_pico_mm,
+                                     na.rm = TRUE))
+```
+
+---
+# ¡Tu turno!
+
+- Utiliza el tibble "aviones" del paquete datos.
+- Agrupa por fabricante y número de motores. 
+- Usa el tibble agrupado y calcula el promedio de asientos
+
+---
+# Unión
+
+- Crea el tibble 1
+
+
+```r
+tibble1 &lt;- read_csv("datos/tibble1.csv")
+
+tibble1
+```
+
+```
+## # A tibble: 5 × 3
+##   isla      especie total
+##   &lt;chr&gt;     &lt;chr&gt;   &lt;dbl&gt;
+## 1 Biscoe    Adelia     44
+## 2 Biscoe    Papúa     124
+## 3 Dream     Adelia     56
+## 4 Dream     Barbijo    68
+## 5 Torgersen Adelia     52
+```
+
+---
+- Crea el tibble 2
+
+
+```r
+tibble2 &lt;- read_csv("datos/tibble2.csv")
+
+tibble2
+```
+
+```
+## # A tibble: 3 × 4
+##   isla      especie promedio_largo_aleta promedio_masa_corporal
+##   &lt;chr&gt;     &lt;chr&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;
+## 1 Dream     Adelia                  190.                  3688.
+## 2 Dream     Barbijo                 196.                  3733.
+## 3 Torgersen Adelia                  191.                  3706.
+```
+
+---
+
+- Conserva las líneas del primer tibble
+
+
+```r
+left_join(tibble1, tibble2)
+```
+
+```
+## Joining, by = c("isla", "especie")
+```
+
+```
+## # A tibble: 5 × 5
+##   isla      especie total promedio_largo_aleta promedio_masa_corporal
+##   &lt;chr&gt;     &lt;chr&gt;   &lt;dbl&gt;                &lt;dbl&gt;                  &lt;dbl&gt;
+## 1 Biscoe    Adelia     44                  NA                     NA 
+## 2 Biscoe    Papúa     124                  NA                     NA 
+## 3 Dream     Adelia     56                 190.                  3688.
+## 4 Dream     Barbijo    68                 196.                  3733.
+## 5 Torgersen Adelia     52                 191.                  3706.
+```
+
+---
+- Conserva las líneas del segundo tibble
+
+
+```r
+right_join(tibble1, tibble2)
+```
+
+```
+## Joining, by = c("isla", "especie")
+```
+
+```
+## # A tibble: 3 × 5
+##   isla      especie total promedio_largo_aleta promedio_masa_corporal
+##   &lt;chr&gt;     &lt;chr&gt;   &lt;dbl&gt;                &lt;dbl&gt;                  &lt;dbl&gt;
+## 1 Dream     Adelia     56                 190.                  3688.
+## 2 Dream     Barbijo    68                 196.                  3733.
+## 3 Torgersen Adelia     52                 191.                  3706.
+```
+
+---
+- Conserva las líneas en común
+
+
+```r
+inner_join(tibble1, tibble2)
+```
+
+```
+## Joining, by = c("isla", "especie")
+```
+
+```
+## # A tibble: 3 × 5
+##   isla      especie total promedio_largo_aleta promedio_masa_corporal
+##   &lt;chr&gt;     &lt;chr&gt;   &lt;dbl&gt;                &lt;dbl&gt;                  &lt;dbl&gt;
+## 1 Dream     Adelia     56                 190.                  3688.
+## 2 Dream     Barbijo    68                 196.                  3733.
+## 3 Torgersen Adelia     52                 191.                  3706.
+```
+
+---
+- Conserva todas las líneas
+
+
+```r
+full_join(tibble1, tibble2)
+```
+
+```
+## Joining, by = c("isla", "especie")
+```
+
+```
+## # A tibble: 5 × 5
+##   isla      especie total promedio_largo_aleta promedio_masa_corporal
+##   &lt;chr&gt;     &lt;chr&gt;   &lt;dbl&gt;                &lt;dbl&gt;                  &lt;dbl&gt;
+## 1 Biscoe    Adelia     44                  NA                     NA 
+## 2 Biscoe    Papúa     124                  NA                     NA 
+## 3 Dream     Adelia     56                 190.                  3688.
+## 4 Dream     Barbijo    68                 196.                  3733.
+## 5 Torgersen Adelia     52                 191.                  3706.
+```
+
+---
+# ¡Tu turno!
+
+- Utiliza el tibble "aviones" del paquete datos.
+- Agrupa por número de motores y genera un tibble con el promedio de asientos (tibble 1). 
+- Filtra a los aviones y conserva a aquellos con más de 2 motores. Agrupa por número de motores y genera un tibble con el mínimo de asientos (tibble 2). 
+- Prueba las diversas formas de unión y observa las diferencias.
+
+---
+
+.pull-left[&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.center[
+# ¡Gracias!
+]
+]
+
+.pull-right[&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;img src="img/gracias.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+.pull-right[Ilustración de Allison Horst]
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"self-contained": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
